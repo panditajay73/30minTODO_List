@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>To-Do List</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+			font-family: Arial, sans-serif;
+		}
+		h1 {
+			text-align: center;
+			color: #333;
+			margin-top: 50px;
+			margin-bottom: 30px;
+		}
+		.todo-container {
+			max-width: 600px;
+			margin: auto;
+			background-color: #fff;
+			padding: 30px;
+			border-radius: 10px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+		}
+		input[type="text"] {
+			width: 80%;
+			padding: 10px;
+			border: none;
+			border-radius: 5px;
+			margin-right: 10px;
+			font-size: 16px;
+		}
+		button {
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 20px 0;
+			border-top: 1px solid #ccc;
+		}
+		li {
+			padding: 10px;
+			border-bottom: 1px solid #ccc;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		li input[type="checkbox"] {
+			margin-right: 10px;
+		}
+		li.completed {
+			text-decoration: line-through;
+			color: #999;
+		}
+		li.editing input[type="text"] {
+			display: inline-block;
+			width: 80%;
+			margin-right: 10px;
+		}
+		li.editing span {
+			display: none;
+		}
+		.delete-btn {
+			background-color: #f44336;
+			color: #fff;
+			border: none;
+			padding: 5px 10px;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+		.edit-btn {
+			background-color: #2196F3;
+			color: #fff;
+			border: none;
+			padding: 5px 10px;
+			border-radius: 5px;
+			font-size: 16px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<h1>To-Do List</h1>
+	<div class="todo-container">
+		<input type="text" id="new-task" placeholder="Add new task...">
+		<button id="add-btn">Add</button>
+		<ul id="task-list"></ul>
+	</div>
+	<script>
+const newTaskInput = document.getElementById('new-task');
+const addBtn = document.getElementById('add-btn');
+const taskList = document.getElementById('task-list');
+
+function addTask() {
+  const newTaskText = newTaskInput.value;
+  if (newTaskText.trim() !== '') {
+    const newTask = document.createElement('li');
+    newTask.innerHTML = `
+      <input type="checkbox">
+      <span>${newTaskText}</span>
+      <button class="edit-btn">Edit</button>
+      <button class="delete-btn">Delete</button>
+    `;
+    taskList.appendChild(newTask);
+    newTaskInput.value = '';
+    addEditDeleteEventListeners(newTask);
+  }
+}
+
+function toggleTaskCompletion() {
+  const task = this.parentNode;
+  task.classList.toggle('completed');
+}
+
+function editTask() {
+  const task = this.parentNode;
+  const taskText = task.querySelector('span');
+  const taskInput = task.querySelector('input[type="text"]');
+  const isEditing = task.classList.contains('editing');
+
+  if (isEditing) {
+    taskText.textContent = taskInput.value;
+    this.textContent = 'Edit';
+  } else {
+    taskInput.value = taskText.textContent;
+    this.textContent = 'Save';
+  }
+
+  task.classList.toggle('editing');
+}
+
+function deleteTask() {
+  const task = this.parentNode;
+  taskList.removeChild(task);
+}
+
+function addEditDeleteEventListeners(task) {
+  const checkbox = task.querySelector('input[type="checkbox"]');
+  const editBtn = task.querySelector('.edit-btn');
+  const deleteBtn = task.querySelector('.delete-btn');
+  checkbox.addEventListener('click', toggleTaskCompletion);
+  editBtn.addEventListener('click', editTask);
+  deleteBtn.addEventListener('click', deleteTask);
+}
+
+addBtn.addEventListener('click', addTask);
+	</script>
+</body>
+</html>
